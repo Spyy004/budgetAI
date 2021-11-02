@@ -147,6 +147,13 @@ class _HomePageState extends State<HomePage> {
                       {
                         if(snapshot.hasData)
                         {
+                          if(snapshot.data.length==0)
+                            {
+                              return Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Center(child: Text("You don't have any transactions, Let's Add Some!",style: paraText.copyWith(fontWeight: FontWeight.w600,fontSize: 16,color: Color(0xff1d1b23)),textAlign: TextAlign.center,)),
+                              );
+                            }
                           return ListView.builder(
                               physics: NeverScrollableScrollPhysics(),
                               scrollDirection: Axis.vertical,
@@ -154,10 +161,6 @@ class _HomePageState extends State<HomePage> {
                               itemCount: snapshot.data.length,
                               reverse: true,
                               itemBuilder: (context,index){
-                                if(index==null)
-                                {
-                                  return Center(child: Text("Sorry, you don't have any transactions"),);
-                                }
                                 return ListTile(
                                   leading: snapshot.data[index].type=="Expense"?Container(
                                     width: 0.13*width,
@@ -181,7 +184,7 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                   ),
                                   trailing: Text("\$" + snapshot.data[index].amount.toString(),style: paraText.copyWith(fontWeight: FontWeight.w600,fontSize: 16,color: Color(0xff1d1b23))),
-                                  title: Text(snapshot.data[index].category.toString(),style: paraText.copyWith(fontWeight: FontWeight.w600,fontSize: 18,color: Colors.black),),
+                                  title: Text(snapshot.data[index].type=="Expense"?snapshot.data[index].description.toString():snapshot.data[index].category.toString(),style: paraText.copyWith(fontWeight: FontWeight.w600,fontSize: 18,color: Colors.black),),
                                   subtitle: Text(snapshot.data[index].description.toString(),style: paraText.copyWith(fontWeight: FontWeight.w400,fontSize: 12,color: Color(0xff263238)),),
                                 );
                               });

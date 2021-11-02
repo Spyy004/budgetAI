@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:resolvers/Models/AllTransactionModel.dart';
 import 'package:http/http.dart' as http;
 import 'package:resolvers/Models/ExpenseBreakdownModel.dart';
+import 'package:resolvers/Models/GoalModel.dart';
 import 'package:resolvers/Models/MonthlyExpenseModel.dart';
 import 'package:resolvers/Models/NetWorthModel.dart';
 import 'package:resolvers/Models/UserProfileModel.dart';
@@ -258,6 +259,29 @@ class GetServices {
     }
     return (jsonData as List)
         .map((jsonData) => NetWorth.fromJson(jsonData))
+        .toList();
+  }
+  Future<List<Goals>>getMyGoals()async
+  {
+    String token = await getToken(key:"token1");
+    var headers = {
+      "Authorization":"Bearer $token"
+    };
+    Uri uri = Uri.parse("https://api-balanced-epic.azurewebsites.net/api/goal");
+    var request = await http.get(uri,headers: headers);
+    var jsonData;
+    if(request.statusCode==200)
+    {
+      jsonData = jsonDecode(request.body);
+    }
+    else
+    {
+      print(request.statusCode);
+      Fluttertoast.showToast(msg: "Sorry, An Error occured while fetching data");
+      return null;
+    }
+    return (jsonData as List)
+        .map((jsonData) => Goals.fromJson(jsonData))
         .toList();
   }
 }
